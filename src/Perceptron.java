@@ -2,18 +2,18 @@ public class Perceptron {
 
     private final int size;
     private final double[] weights;
-    private final double alpha;
+    private final double learningRate;
     private double theta;
 
     public int getSize() {
         return size;
     }
 
-    Perceptron(int size) {
+    Perceptron(int size, double learningRate) {
         this.size = size;
         this.weights = new double[size];
         this.theta = 0;
-        this.alpha = 0.01;
+        this.learningRate = learningRate;
     }
 
     boolean classify(double[] input) {
@@ -30,9 +30,9 @@ public class Perceptron {
         int error = (correctOutput? 1 : 0) - (current? 1 : 0);
 
         for (int i=0; i<size; i++) {
-            weights[i] += error * alpha * input[i];
+            weights[i] += error * learningRate * input[i];
         }
-        theta -= alpha * error;
+        theta -= learningRate * error;
     }
 
     boolean test(double[] input, boolean correctOutput) {

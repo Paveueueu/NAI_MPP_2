@@ -5,8 +5,10 @@ public class Teacher {
     private String class0;
     private String class1;
 
-    int correct_answers = 0;
-    int total_answers = 0;
+    private int correct_class0 = 0;
+    private int correct_class1 = 0;
+    private int total_class0 = 0;
+    private int total_class1 = 0;
 
     Teacher(Perceptron perceptron) {
         this.perceptron = perceptron;
@@ -23,7 +25,6 @@ public class Teacher {
         class0 = uniqueClassNames.get(0);
         class1 = uniqueClassNames.get(1);
 
-        Collections.shuffle(trainList);
         for (Data d : trainList) {
             System.out.println("Training " + d);
             perceptron.train(d.x, d.className.equals(class1));
@@ -37,13 +38,27 @@ public class Teacher {
             System.out.println("[TEST] " + (isCorrect ? "CORRECT" : "INCORRECT") +
                     "   classification: '" + (classIndicator ? class1 : class0) + "'   label: '" + d.className + "'");
 
-            total_answers++;
-            if (isCorrect) correct_answers++;
+            if (!classIndicator) {
+                if (isCorrect) {
+                    correct_class0++;
+                }
+                total_class0++;
+            }
+            else {
+                if (isCorrect) {
+                    correct_class1++;
+                }
+                total_class1++;
+            }
         }
 
-        double accuracy = testList.isEmpty() ? 1.0 : (double) correct_answers / testList.size() * 100;
+        double accuracy = testList.isEmpty() ? 1.0 : (double) (correct_class0 + correct_class1) / testList.size() * 100;
+        double accuracy_class0 = testList.isEmpty() ? 1.0 : (double) correct_class0 / total_class0 * 100;
+        double accuracy_class1 = testList.isEmpty() ? 1.0 : (double) correct_class1 / total_class1 * 100;
         System.out.println("-------------------------");
-        System.out.println("Accuracy: " + accuracy + "%");
+        System.out.println("Accuracy: " + accuracy + " %");
+        System.out.println(class0 +  " accuracy: " + accuracy_class0 + " %");
+        System.out.println(class1 + " accuracy: " + accuracy_class1 + " %");
         System.out.println("-------------------------\n");
     }
 

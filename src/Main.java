@@ -31,28 +31,31 @@ public class Main {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.out.println("usage: <train_set_path> <test_set_path>");
+            System.out.println("usage: <learning_rate> <train_set_path> <test_set_path>");
             return;
         }
-        List<Data> trainList = readCsvFile("train-set.csv");
-        List<Data> testList = readCsvFile("test-set.csv");
 
+        double learningRate = Double.parseDouble(args[0]);
+        List<Data> trainList = readCsvFile(args[1]);
+        List<Data> testList = readCsvFile(args[2]);
 
-        Perceptron perceptron = new Perceptron(4);
+        Perceptron perceptron = new Perceptron(trainList.get(0).x.length, learningRate);
         Teacher teacher = new Teacher(perceptron);
         teacher.train(trainList);
         teacher.test(testList);
 
-        System.out.println(" > classify(");
-        Scanner scanner = new Scanner(System.in);
-        double[] attributes = new double[perceptron.getSize()];
+        while (true) {
+            System.out.println(" > classify(");
+            Scanner scanner = new Scanner(System.in);
+            double[] attributes = new double[perceptron.getSize()];
 
-        for (int i = 1; i <= attributes.length; i++) {
-            System.out.print("\tx" + i + "=");
-            attributes[i-1] = scanner.nextDouble();
+            for (int i = 1; i <= attributes.length; i++) {
+                System.out.print("\tx" + i + "=");
+                attributes[i-1] = scanner.nextDouble();
+            }
+
+            System.out.println(" )");
+            System.out.println("[RESULT] classification: '" + teacher.classify(attributes) + "'");
         }
-
-        System.out.println(" )");
-        System.out.println("[RESULT] classification: '" + teacher.classify(attributes) + "'");
     }
 }
